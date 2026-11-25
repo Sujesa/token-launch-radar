@@ -239,9 +239,11 @@ export function buildBoard(snapshot: Snapshot, model: ModelConstants = MODEL): B
     .slice(0, EARLY_ROWS);
   for (const p of early) chosen.set(p.slug, p);
 
+  // Score every chosen protocol with the same function, then rank strongest first.
+  // Ties break on slug, so two runs over the same snapshot write the same bytes.
   const scored = [...chosen.values()].map((p) => {
-    const { implied, growthPct, growthMult, maturityMult, breadthMult, age } = impliedValue(p, snapshot.as_of, model);
-    return { p, implied, growthPct, growthMult, maturityMult, breadthMult, age };
+    const v = impliedValue(p, snapshot.as_of, model);
+    return { p, implied: v.implied, growthPct: v.growthPct, growthMult: v.growthMult, maturityMult: v.maturityMult, breadthMult: v.breadthMult, age: v.age };
   });
   scored.sort((a, b) => b.implied - a.implied || (a.p.slug < b.p.slug ? -1 : a.p.slug > b.p.slug ? 1 : 0));
   return scored.map((s, i) => ({
@@ -302,34 +304,37 @@ function holdDaysFor(age: number | null): number {
   return 30;
 }
 
-/** The category's one action, in the words a farmer can follow. */
+/** The category's one opening action, written so a farmer can follow it without guessing.
+ *  Only the category decides the verb: lending supplies, a DEX provides liquidity, a bridge
+ *  moves funds, staking locks the chain's asset, and so on. No name is ever special-cased. */
 function actionFor(p: SnapshotProtocol, capital: number, chain: string): string {
   const c = (p.category ?? '').toLowerCase();
   const name = p.name;
-  if (c.includes('lend') || c.includes('cdp') || c.includes('collateral')) return `Supply $${capital} of USDC to ${name} on ${chain} and keep the position open.`;
-  if (c.includes('dex') || c.includes('yield') || c.includes('leveraged farm')) return `Provide $${capital} of liquidity to ${name}'s main pool on ${chain} and keep the position open.`;
-  if (c.includes('bridge')) return `Bridge $${capital} of USDC to ${chain} through ${name} and use the bridged funds in its app.`;
-  if (c.includes('staking') || c.includes('restak')) return `Stake $${capital} of the chain's staking asset through ${name} and keep the receipt.`;
-  if (c.includes('perpetual') || c.includes('derivative')) return `Deposit $${capital} of USDC as margin on ${name} and open one small hedge.`;
-  if (c.includes('prediction')) return `Fund $${capital} and place one market position on ${name}.`;
-  if (c.includes('curator') || c.includes('allocator')) return `Deposit $${capital} into a ${name} vault on ${chain} and keep the shares.`;
+  if (c.includes('lend') || c.includes('cdp') || c.includes('collateral')) return `Supply $${capital} of USDC to ${name} on ${chain} and leave the position open.`;
+  if (c.includes('dex') || c.includes('yield') || c.includes('leveraged farm')) return `Add $${capital} of liquidity to ${name}'s main pool on ${chain} and leave the position open.`;
+  if (c.includes('bridge')) return `Bridge $${capital} of USDC to ${chain} through ${name}, then use the bridged funds inside its app.`;
+  if (c.includes('staking') || c.includes('restak')) return `Stake $${capital} of the chain's staking asset through ${name} and hold on to the receipt.`;
+  if (c.includes('perpetual') || c.includes('derivative')) return `Post $${capital} of USDC as margin on ${name} and open one small hedge.`;
+  if (c.includes('prediction')) return `Fund the account with $${capital} and place one market position on ${name}.`;
+  if (c.includes('curator') || c.includes('allocator')) return `Put $${capital} into a ${name} vault on ${chain} and hold the shares.`;
   if (c.includes('stable')) return `Mint or deposit $${capital} of the stable asset through ${name} on ${chain}.`;
-  if (c.includes('rwa')) return `Mint $${capital} of the protocol's yield asset on ${chain} and hold it.`;
+  if (c.includes('rwa')) return `Mint $${capital} of the protocol's yield-bearing asset on ${chain} and hold it.`;
   if (c.includes('insurance')) return `Buy $${capital} of cover from ${name} on ${chain} and keep the policy.`;
-  return `Deposit $${capital} of USDC into ${name} on ${chain} and keep the position open.`;
+  return `Deposit $${capital} of USDC into ${name} on ${chain} and leave the position open.`;
 }
 
-/** One repeatable weekly action, chosen by the protocol's category, not its name. */
+/** One repeatable weekly action, again chosen by category, never by name. A farm plan that
+ *  only says "do something weekly" is a slogan; this one names the something. */
 function weeklyFor(p: SnapshotProtocol, chain: string): string {
   const c = (p.category ?? '').toLowerCase();
   if (c.includes('lend') || c.includes('cdp')) return `Borrow $10 against the position on ${chain}, repay it the same week, and leave the supply open.`;
-  if (c.includes('dex') || c.includes('yield')) return `Swap $10 through the protocol's main pool on ${chain} and add the proceeds back to the position.`;
+  if (c.includes('dex') || c.includes('yield')) return `Swap $10 through the protocol's main pool on ${chain} and put the proceeds back into the position.`;
   if (c.includes('perpetual') || c.includes('derivative')) return `Close and reopen one small hedge on ${chain} so the account shows activity every week.`;
-  if (c.includes('bridge')) return `Bridge $10 to ${chain} through the protocol and use it in the app that week.`;
+  if (c.includes('bridge')) return `Bridge $10 to ${chain} through the protocol and spend it in the app that week.`;
   if (c.includes('staking') || c.includes('restak')) return `Claim the staking rewards on ${chain} and restake them instead of withdrawing.`;
   if (c.includes('prediction')) return `Settle one small market position on ${chain} and open the next one.`;
   if (c.includes('curator') || c.includes('allocator')) return `Check the vault's allocation on ${chain} each week and top up the best-performing vault by $10.`;
-  return `Make one on-chain action on ${chain} each week, such as a deposit, a swap or a vote.`;
+  return `Do one on-chain action on ${chain} each week, such as a deposit, a swap or a vote.`;
 }
 
 /**

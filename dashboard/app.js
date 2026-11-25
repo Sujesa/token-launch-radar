@@ -77,17 +77,17 @@
   function actionFor(p, capital, chain) {
     var c = (p.category || '').toLowerCase();
     var name = p.name;
-    if (c.indexOf('lend') >= 0 || c.indexOf('cdp') >= 0 || c.indexOf('collateral') >= 0) return 'Supply $' + capital + ' of USDC to ' + name + ' on ' + chain + ' and keep the position open.';
-    if (c.indexOf('dex') >= 0 || c.indexOf('yield') >= 0 || c.indexOf('leveraged farm') >= 0) return 'Provide $' + capital + ' of liquidity to ' + name + "'s main pool on " + chain + ' and keep the position open.';
-    if (c.indexOf('bridge') >= 0) return 'Bridge $' + capital + ' of USDC to ' + chain + ' through ' + name + ' and use the bridged funds in its app.';
-    if (c.indexOf('staking') >= 0 || c.indexOf('restak') >= 0) return "Stake $" + capital + " of the chain's staking asset through " + name + ' and keep the receipt.';
-    if (c.indexOf('perpetual') >= 0 || c.indexOf('derivative') >= 0) return 'Deposit $' + capital + ' of USDC as margin on ' + name + ' and open one small hedge.';
-    if (c.indexOf('prediction') >= 0) return 'Fund $' + capital + ' and place one market position on ' + name + '.';
-    if (c.indexOf('curator') >= 0 || c.indexOf('allocator') >= 0) return 'Deposit $' + capital + ' into a ' + name + ' vault on ' + chain + ' and keep the shares.';
+    if (c.indexOf('lend') >= 0 || c.indexOf('cdp') >= 0 || c.indexOf('collateral') >= 0) return 'Supply $' + capital + ' of USDC to ' + name + ' on ' + chain + ' and leave the position open.';
+    if (c.indexOf('dex') >= 0 || c.indexOf('yield') >= 0 || c.indexOf('leveraged farm') >= 0) return 'Add $' + capital + ' of liquidity to ' + name + "'s main pool on " + chain + ' and leave the position open.';
+    if (c.indexOf('bridge') >= 0) return 'Bridge $' + capital + ' of USDC to ' + chain + ' through ' + name + ', then use the bridged funds inside its app.';
+    if (c.indexOf('staking') >= 0 || c.indexOf('restak') >= 0) return "Stake $" + capital + " of the chain's staking asset through " + name + ' and hold on to the receipt.';
+    if (c.indexOf('perpetual') >= 0 || c.indexOf('derivative') >= 0) return 'Post $' + capital + ' of USDC as margin on ' + name + ' and open one small hedge.';
+    if (c.indexOf('prediction') >= 0) return 'Fund the account with $' + capital + ' and place one market position on ' + name + '.';
+    if (c.indexOf('curator') >= 0 || c.indexOf('allocator') >= 0) return 'Put $' + capital + ' into a ' + name + ' vault on ' + chain + ' and hold the shares.';
     if (c.indexOf('stable') >= 0) return 'Mint or deposit $' + capital + ' of the stable asset through ' + name + ' on ' + chain + '.';
-    if (c.indexOf('rwa') >= 0) return "Mint $" + capital + " of the protocol's yield asset on " + chain + ' and hold it.';
+    if (c.indexOf('rwa') >= 0) return "Mint $" + capital + " of the protocol's yield-bearing asset on " + chain + ' and hold it.';
     if (c.indexOf('insurance') >= 0) return 'Buy $' + capital + ' of cover from ' + name + ' on ' + chain + ' and keep the policy.';
-    return 'Deposit $' + capital + ' of USDC into ' + name + ' on ' + chain + ' and keep the position open.';
+    return 'Deposit $' + capital + ' of USDC into ' + name + ' on ' + chain + ' and leave the position open.';
   }
   function stepText(step) {
     var s = step.text + ' Cost: ' + step.cost + '. Time: ' + step.time + '.';
@@ -98,13 +98,13 @@
   function weeklyFor(p, chain) {
     var c = (p.category || '').toLowerCase();
     if (c.indexOf('lend') >= 0 || c.indexOf('cdp') >= 0) return 'Borrow $10 against the position on ' + chain + ', repay it the same week, and leave the supply open.';
-    if (c.indexOf('dex') >= 0 || c.indexOf('yield') >= 0) return "Swap $10 through the protocol's main pool on " + chain + ' and add the proceeds back to the position.';
+    if (c.indexOf('dex') >= 0 || c.indexOf('yield') >= 0) return "Swap $10 through the protocol's main pool on " + chain + ' and put the proceeds back into the position.';
     if (c.indexOf('perpetual') >= 0 || c.indexOf('derivative') >= 0) return 'Close and reopen one small hedge on ' + chain + ' so the account shows activity every week.';
-    if (c.indexOf('bridge') >= 0) return 'Bridge $10 to ' + chain + ' through the protocol and use it in the app that week.';
+    if (c.indexOf('bridge') >= 0) return 'Bridge $10 to ' + chain + ' through the protocol and spend it in the app that week.';
     if (c.indexOf('staking') >= 0 || c.indexOf('restak') >= 0) return 'Claim the staking rewards on ' + chain + ' and restake them instead of withdrawing.';
     if (c.indexOf('prediction') >= 0) return 'Settle one small market position on ' + chain + ' and open the next one.';
     if (c.indexOf('curator') >= 0 || c.indexOf('allocator') >= 0) return "Check the vault's allocation on " + chain + ' each week and top up the best-performing vault by $10.';
-    return 'Make one on-chain action on ' + chain + ' each week, such as a deposit, a swap or a vote.';
+    return 'Do one on-chain action on ' + chain + ' each week, such as a deposit, a swap or a vote.';
   }
   function farmSteps(p) {
     var chain = chainOf(p);

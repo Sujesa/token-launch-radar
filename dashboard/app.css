@@ -1,5 +1,8 @@
-/* Token Radar's plain theme. The five palette values, two radii and two families are the whole style;
-   everything else is spacing, a hairline and a type step. */
+/* Token Radar's plain theme: five palette values, two radii and two type
+   families are the whole style. Everything else is spacing, a hairline and
+   a type step. The dashboard is meant to read like a ledger, not a poster:
+   dark ink on a pale green-grey canvas, one green accent, red only for a
+   falling seven-day change. */
 :root {
   --canvas: #f2f5f3;
   --surface: #ffffff;
@@ -45,6 +48,7 @@ a { color: var(--accent); }
 .skip:focus { left: var(--step-4); top: var(--step-4); }
 :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
+/* Page frame: a centred shell, a header row, then the lede with its facts. */
 .shell { max-width: 1320px; margin: 0 auto; padding: var(--step-5) var(--step-6) var(--step-7); }
 .top {
   display: flex; align-items: flex-start; justify-content: space-between; gap: var(--step-5);
@@ -62,6 +66,7 @@ a { color: var(--accent); }
 .fact b { font-family: var(--font-num); font-size: 15px; font-weight: 500; }
 .fact span { color: var(--muted); font-size: 13px; }
 
+/* Controls: search, category, chain and scope filters, then the token-status tabs. */
 .controls { display: flex; flex-wrap: wrap; align-items: end; gap: var(--step-3); padding: var(--step-4) 0; border-top: 1px solid var(--border); }
 .field { display: grid; gap: var(--step-1); }
 .field label { color: var(--muted); font-size: 12px; }
@@ -75,6 +80,7 @@ a { color: var(--accent); }
 .tabs button[aria-pressed="true"] { background: var(--ink); color: var(--surface); }
 .count { margin-left: auto; color: var(--muted); font-size: 13px; align-self: center; }
 
+/* The board table, and the model note that sits under it. */
 .panel { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-panel); overflow: hidden; }
 .table-wrap { overflow-x: auto; }
 table { width: 100%; border-collapse: collapse; font-size: 14px; }
@@ -104,6 +110,7 @@ tbody tr[data-selected="true"] { background: color-mix(in srgb, var(--accent) 8%
 .button { min-height: 36px; padding: 0 var(--step-4); border: 1px solid var(--border); border-radius: var(--radius-control); background: var(--surface); }
 .button.primary { background: var(--accent); border-color: var(--accent); color: var(--surface); }
 
+/* The detail panel: a fixed side sheet with the model's equation and the farm plan. */
 .detail {
   position: fixed; top: 0; right: 0; bottom: 0; width: min(520px, 92vw); z-index: 10;
   background: var(--surface); border-left: 1px solid var(--border); padding: var(--step-5);

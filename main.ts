@@ -1,14 +1,18 @@
-// A working token-radar-01 entry (Node 22, standard library only).
+// Token launch radar: a token-radar-01 entry, Node 22, standard library only.
 //
-// The program reads the sealed snapshot from /input/snapshot.json (or --input <file|dir>), scores every
-// pre-token protocol with the model in lib/model.ts, writes the ranked board to /output/board.json, and
-// copies this repository's dashboard/ and screenshots/ to /output. Last, it writes /output/dossier.json,
-// the summary the judge reads, with the vendored make.fun library.
+// The program reads the sealed snapshot at /input/snapshot.json (or --input
+// <file|dir>), scores every pre-token protocol with the radar-2 model in
+// lib/model.ts, writes the ranked board to /output/board.json, and copies this
+// repository's dashboard/ and screenshots/ into /output. It finishes by
+// writing /output/dossier.json, the summary the judge reads, with the
+// vendored make.fun library.
 //
-// The dashboard is a static page, no framework and no network: dashboard/index.html, dashboard/app.css
-// and dashboard/app.js read /output/data.js, which this program writes from the same board. A starting
-// point, not a winner: it covers the watchlist, states the model and gives every protocol a farm plan.
-// Change the model, the page or the plan; keep the gate's shape.
+// The dashboard is a static page with no framework and no network:
+// dashboard/index.html, dashboard/app.css and dashboard/app.js read
+// /output/data.js, which this program writes from the same board. The
+// starter was a working entry, not a winner: this one covers the whole
+// watchlist, carries every rankable early protocol below the floor, states
+// the model in the page, and gives every protocol a seven-step farm plan.
 //
 // Outside the grader's container, MAKEFUN_OUTPUT_DIR stands in for /output:
 //   mkdir -p out && MAKEFUN_OUTPUT_DIR=out node main.ts --input ../input/snapshot.json
