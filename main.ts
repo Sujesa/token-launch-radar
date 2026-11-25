@@ -13,6 +13,7 @@
 // starter was a working entry, not a winner: this one covers the whole
 // watchlist, carries every rankable early protocol below the floor, states
 // the model in the page, and gives every protocol a seven-step farm plan.
+// Entry repository: https://github.com/Sujesa/token-launch-radar
 //
 // Outside the grader's container, MAKEFUN_OUTPUT_DIR stands in for /output:
 //   mkdir -p out && MAKEFUN_OUTPUT_DIR=out node main.ts --input ../input/snapshot.json
